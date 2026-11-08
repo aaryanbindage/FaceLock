@@ -220,6 +220,7 @@ class FaceLockApp:
 
         def done(ok, method):
             self.current_auth = None
+            self.last_auth_seconds = popup.verified_after
             callback(ok)
             if ok:
                 # One look covers every app that was waiting at the same moment.
@@ -349,7 +350,15 @@ class FaceLockApp:
 
     def test_face(self):
         def result(ok):
-            QMessageBox.information(self.window, "FaceLock", "Recognized you!" if ok else "Not verified.")
+            if ok:
+                icon, text = QMessageBox.Information, f"Recognized you in {self.last_auth_seconds:.1f} seconds."
+            else:
+                icon, text = QMessageBox.Warning, "Face ID didn't verify you (cancelled or timed out)."
+            box = QMessageBox(icon, "Test Face ID", text, QMessageBox.Ok, self.window)
+            box.setAttribute(Qt.WA_DeleteOnClose)
+            box.open()  # non-blocking
+            box.raise_()
+            box.activateWindow()
         self.authenticate("Test Face ID", "Look at the camera", result)
 
     def add_locked_app(self, exe, path=""):

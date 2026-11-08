@@ -1,7 +1,7 @@
 ; Inno Setup script: builds release\FaceLock-Setup.exe from dist\FaceLock (run build.ps1 first).
 
 #define AppName "FaceLock"
-#define AppVersion "2.0.0"
+#define AppVersion "2.0.1"
 #define AppExe "FaceLock.exe"
 
 [Setup]

@@ -79,7 +79,7 @@ class FaceScanner(QWidget):
             if w.finished and not self._emitted:
                 self._emitted = True
                 self.state, self.target_progress = vision.OK, 1.0
-                QTimer.singleShot(650, self.finished.emit)
+                QTimer.singleShot(650, self, self.finished.emit)  # cancelled if the scanner is deleted
         self.progress += (self.target_progress - self.progress) * 0.18
         if self.state == vision.OK:
             self.ok_t = min(1.0, self.ok_t + 0.07)

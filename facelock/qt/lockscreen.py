@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (QFrame, QGraphicsDropShadowEffect, QHBoxLayout, Q
                                QPushButton, QVBoxLayout, QWidget)
 
 from .. import config, winapi
-from ..vision import Verifier
+from ..vision import OK, Verifier
 from . import theme
 from .widgets import FaceScanner, PinField, label
 
@@ -186,11 +186,19 @@ class AuthPopup(QWidget):
     def finish(self, ok, method):
         if self._finished:
             return
+        if not ok and method == "cancel" and self.scanner.state == OK:
+            ok, method = True, "face"  # closed during the success animation: already verified
         self._finished = True
+        self.verified_after = max(0.0, time.monotonic() - self.started - (0.65 if method == "face" else 0))
         self.tick.stop()
         self.scanner.stop()
-        self.done.emit(ok, method)
-        self._fade = fade(self, self.windowOpacity(), 0, 150, self.close)
+
+        # Report only after the popup is gone, so whatever comes next (dialogs, windows)
+        # isn't hidden behind this always-on-top popup.
+        def closed():
+            self.close()
+            self.done.emit(ok, method)
+        self._fade = fade(self, self.windowOpacity(), 0, 150, closed)
 
 
 def blurred(pixmap, strength=28):
