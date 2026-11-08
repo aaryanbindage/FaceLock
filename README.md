@@ -7,15 +7,16 @@ Lock **apps** and your **whole PC** with your face. No IR / Windows Hello camera
 ## Download
 Get the latest version from the **[Releases](https://github.com/aaryanbindage/FaceLock/releases/latest)** page:
 
-1. Download `FaceLock-Windows.zip` and unzip it anywhere.
-2. Open the folder and run `FaceLock.exe`. To install it with Start Menu and Desktop shortcuts instead, right-click `install.ps1` and choose **Run with PowerShell**.
-3. If Windows SmartScreen warns about an unknown publisher, click **More info → Run anyway**. The app isn't code-signed.
+- **`FaceLock-Setup.exe` (recommended):** run it and click through. It installs for your user only (no admin needed), adds Start Menu shortcuts, and can start FaceLock with Windows. Uninstall it from **Settings → Apps**.
+- **`FaceLock-Windows.zip` (portable):** unzip it anywhere and run `FaceLock.exe`.
+
+If Windows SmartScreen warns about an unknown publisher, click **More info → Run anyway**. The app isn't code-signed.
 
 Requires Windows 10 or 11 (64-bit) and any webcam.
 
 ## Build from source
 - **Run:** `pip install -r requirements.txt`, then `pythonw FaceLock.pyw`
-- **Build the exe:** `powershell -File build.ps1` (output goes to `dist\FaceLock\`)
+- **Build the exe:** `powershell -File build.ps1` (output goes to `dist\FaceLock\`; if Inno Setup is installed, it also builds `release\FaceLock-Setup.exe` from `installer.iss`)
 - **Install the build:** `powershell -File install.ps1`. To uninstall, run `uninstall.ps1` (add `-KeepData` to keep your face data).
 
 The first launch walks you through setup: scan your face, choose a backup PIN, pick apps to lock, and decide whether to start with Windows. After that FaceLock lives in the system tray. Click the tray icon to open the dashboard (this needs Face ID); right-click for Lock / Pause / Quit.
